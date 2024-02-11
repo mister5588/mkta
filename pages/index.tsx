@@ -1,60 +1,97 @@
-import type { NextPage } from "next";
-import Link from "next/link";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import {
+  useContract,
+  useNFTs,
+  useOwnedNFTs,
+  useValidDirectListings,
+  useValidEnglishAuctions,
+} from "@thirdweb-dev/react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import Container from "../components/Container/Container";
+import ListingWrapper from "../components/ListingWrapper/ListingWrapper";
+import NFTGrid from "../components/NFT/NFTGrid";
+import Skeleton from "../components/Skeleton/Skeleton";
+import {
+  MARKETPLACE_ADDRESS,
+  NFT_COLLECTION_ADDRESS,
+} from "../const/contractAddresses";
+import styles from "../styles/Profile.module.css";
+import randomColor from "../util/randomColor";
 
-/**
- * Landing page with a simple gradient background and a hero asset.
- * Free to customize as you see fit.
- */
-const Home: NextPage = () => {
-  return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.hero}>
-          <div className={styles.heroBackground}>
-            <div className={styles.heroBackgroundInner}>
-              <Image
-                src="/hero-gradient.png"
-                width={1390}
-                height={1390}
-                alt="Background gradient from red to blue"
-                quality={100}
-                className={styles.gradient}
-              />
-            </div>
-          </div>
-          <div className={styles.heroAssetFrame}>
-            <Image
-              src="/xailien.png"
-              width={860}
-              height={540}
-              alt="Hero asset, NFT marketplace"
-              quality={100}
-              className={styles.heroAsset}
-            />
-          </div>
-          <div className={styles.heroBodyContainer}>
-            <div className={styles.heroBody}>
-              <h1 className={styles.heroTitle}>
-                <br />
-              </h1>
+const [randomColor1, randomColor2, randomColor3, randomColor4] = [
+  randomColor(),
+  randomColor(),
+  randomColor(),
+  randomColor(),
+];
 
+export default function ProfilePage() {
+  const router = useRouter();
+  const [tab, setTab] = useState<"nfts" | "listings" | "auctions">("listings"); // Set "listings" as the default active tab
 
-              <div className={styles.heroCtaContainer}>
-                <Link className={styles.heroCta} href="/buy">
-                  Buy Xailiens
-                </Link>
-                <Link className={styles.heroCta} href="/sell">
-                  Sell Xailiens
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  const { contract: nftCollection } = useContract(NFT_COLLECTION_ADDRESS);
+  const { contract: marketplace } = useContract(
+    MARKETPLACE_ADDRESS,
+    "marketplace-v3"
   );
-};
+  const { data: ownedNfts, isLoading: loadingOwnedNfts } = useNFTs(nftCollection);
 
-export default Home;
+  const { data: directListings, isLoading: loadingDirects } =
+    useValidDirectListings(marketplace, {
+      seller: router.query.address as string,
+    });
+
+  const { data: auctionListings, isLoading: loadingAuctions } =
+    useValidEnglishAuctions(marketplace, {
+      seller: router.query.address as string,
+    });
+
+  return (
+    <Container maxWidth="lg">
+      <div className={styles.tabs}>
+        <h3
+          className={`${styles.tab} ${
+            tab === "listings" ? styles.activeTab : ""
+          }`}
+          onClick={() => setTab("listings")}
+        >
+          Listed Xailiens 
+        </h3>
+        <h3
+          className={`${styles.tab} ${
+            tab === "auctions" ? styles.activeTab : ""
+          }`}
+          onClick={() => setTab("auctions")}
+        >
+          Current Auctions
+        </h3>
+      </div>
+      <div
+        className={`${tab === "listings" ? styles.activeTabContent : styles.tabContent}`}
+      >
+        {loadingDirects ? (
+          <p>Loading...</p>
+        ) : directListings && directListings.length === 0 ? (
+          <p>Nothing for sale yet! Head to the sell tab to list an NFT.</p>
+        ) : (
+          directListings?.map((listing) => (
+            <ListingWrapper listing={listing} key={listing.id} />
+          ))
+        )}
+      </div>
+      <div
+        className={`${tab === "auctions" ? styles.activeTabContent : styles.tabContent}`}
+      >
+        {loadingAuctions ? (
+          <p>Loading...</p>
+        ) : auctionListings && auctionListings.length === 0 ? (
+          <p>No Xailien available.</p>
+        ) : (
+          auctionListings?.map((listing) => (
+            <ListingWrapper listing={listing} key={listing.id} />
+          ))
+        )}
+      </div>
+    </Container>
+  );
+}
