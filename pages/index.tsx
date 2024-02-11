@@ -1,25 +1,60 @@
-import { useContract, useNFTs } from "@thirdweb-dev/react";
-import React from "react";
-import Container from "../components/Container/Container";
-import NFTGrid from "../components/NFT/NFTGrid";
-import { NFT_COLLECTION_ADDRESS } from "../const/contractAddresses";
+import type { NextPage } from "next";
+import Link from "next/link";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
 
-export default function Buy() {
-  // Load all of the NFTs from the NFT Collection
-  const { contract } = useContract(NFT_COLLECTION_ADDRESS);
-  const { data, isLoading } = useNFTs(contract);
-
+/**
+ * Landing page with a simple gradient background and a hero asset.
+ * Free to customize as you see fit.
+ */
+const Home: NextPage = () => {
   return (
-    <Container maxWidth="lg">
-      <h1>Buy NFTs</h1>
-      <p>Browse which NFTs are available from the collection.</p>
-      <NFTGrid
-        data={data}
-        isLoading={isLoading}
-        emptyText={
-          "Collection error"
-        }
-      />
-    </Container>
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <div className={styles.hero}>
+          <div className={styles.heroBackground}>
+            <div className={styles.heroBackgroundInner}>
+              <Image
+                src="/hero-gradient.png"
+                width={1390}
+                height={1390}
+                alt="Background gradient from red to blue"
+                quality={100}
+                className={styles.gradient}
+              />
+            </div>
+          </div>
+          <div className={styles.heroAssetFrame}>
+            <Image
+              src="/xailien.jpg"
+              width={860}
+              height={540}
+              alt="Hero asset, NFT marketplace"
+              quality={100}
+              className={styles.heroAsset}
+            />
+          </div>
+          <div className={styles.heroBodyContainer}>
+            <div className={styles.heroBody}>
+              <h1 className={styles.heroTitle}>
+                <br />
+              </h1>
+
+
+              <div className={styles.heroCtaContainer}>
+                <Link className={styles.heroCta} href="/buy">
+                  Buy Xailiens
+                </Link>
+                <Link className={styles.heroCta} href="/sell">
+                  Sell Xailiens
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default Home;
