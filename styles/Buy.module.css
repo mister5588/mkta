@@ -8,12 +8,13 @@
 .activeTabContent {
   display: flex;
   flex-wrap: wrap;
-  gap: 1%; 
+  gap: 1%; /* Adjust the gap as needed */
   width: 100%;
 }
 
+/* Add the following style to ensure 5 NFTs per line */
 .activeTabContent .nftContainer {
-  width: calc(20% - 1%); 
+  width: calc(20% - 1%); /* Adjust the width and gap to ensure 5 elements per line */
   margin-bottom: 1%;
 }
 

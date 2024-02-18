@@ -2,59 +2,74 @@
 
 Create an NFT marketplace on top of your NFT collection on **any** EVM-compatible blockchain.
 
-## Installation
+## Features
 
-Install via [thirdweb create](https://portal.thirdweb.com/cli/create)
+- View all NFTs from your collection and their status on the marketplace on the [buy](/pages/buy.tsx) page.
 
-```bash
-  npx thirdweb create --template marketplace-v3
-```
+- Select which NFT from your wallet to sell for either a **direct listing** or **english auction** on the marketplace on the [sell](/pages/sell.tsx) page.
 
-## Run Locally
+- View all NFTs a user owns from your collection on the [profile](/pages/profile/%5Baddress%5D.tsx) pages.
 
-Install dependencies
+- Buy NFTs directly from the marketplace on the [item](/pages/token/%5BcontractAddress%5D/%5BtokenId%5D.tsx) pages.
 
-```bash
-  # npm
-  npm install
+- Place bids/offers on NFTs from the marketplace on the [item](/pages/token/%5BcontractAddress%5D/%5BtokenId%5D.tsx) pages.
 
-  # yarn
-  yarn install
-```
+<br/>
 
-Start the server
+## Using this template
 
-```bash
-  # npm
-  npm run start
+1. Deploy a [Marketplace V3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract
+2. Clone this repository using the [CLI](https://portal.thirdweb.com/cli)
+3. Plug your contract addresses and chain in the [contractAddresses.ts](/const/contractAddresses.ts) file.
 
-  # yarn
-  yarn start
-```
+<br/>
 
-## Environment Variables
+### Deploy the Marketplace V3 contract
 
-To run this project, you will need to add environment variables. Check the `.env.example` file for all the environment variables required and add it to `.env.local` file or set them up on your hosting provider.
+Head to the [MarketplaceV3](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract page on the thirdweb dashboard.
 
-## Deployment
+Deploy the marketplace to the same network as your NFT collection.
 
-Deploy a copy of your application to IPFS using the following command:
+<br/>
+
+### Clone this repository
+
+Clone a copy of this repository and install the dependencies using the [thirdweb CLI](https://portal.thirdweb.com/cli):
 
 ```bash
-  yarn deploy
+npx thirdweb create --template marketplace-v3
 ```
 
-## Additional Resources
+_Note: This requires [Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and [Git](https://git-scm.com/downloads). [Yarn](https://classic.yarnpkg.com/en/docs/install/#mac-stable) is also recommended._
 
-- [Documentation](https://portal.thirdweb.com)
-- [Templates](https://thirdweb.com/templates)
-- [Video Tutorials](https://youtube.com/thirdweb_)
-- [Blog](https://blog.thirdweb.com)
+<br/>
 
-## Contributing
+### Add your contract addresses
 
-Contributions and [feedback](https://feedback.thirdweb.com) are always welcome! Please check our [open source page](https://thirdweb.com/open-source) for more information.
+In the [contractAddresses.ts](/const/contractAddresses.ts) file, add your contract addresses and chain.
 
-## Need help?
+If you haven't already, import your smart contracts into the [thirdweb dashboard](https://thirdweb.com/dashboard).
 
-For help, join the [discord](https://discord.gg/thirdweb) or visit our [support page](https://support.thirdweb.com).
+```ts
+/** Replace the values below with the addresses of your smart contracts */
+
+// 1. Set up the network your smart contracts are deployed to.
+// First, import the chain from the package, then set the NETWORK variable to the chain.
+import { Mumbai } from "@thirdweb-dev/chains";
+export const NETWORK = Mumbai;
+
+// 2. The address of the marketplace V3 smart contract.
+// Deploy your own: https://thirdweb.com/thirdweb.eth/MarketplaceV3
+export const MARKETPLACE_ADDRESS = "";
+
+// 3. The address of your NFT collection smart contract.
+export const NFT_COLLECTION_ADDRESS = "";
+
+// (Optional) Set up the URL of where users can view transactions on
+// For example, below, we use Mumbai.polygonscan to view transactions on the Mumbai testnet.
+export const ETHERSCAN_URL = "https://mumbai.polygonscan.com";
+```
+
+## Join our Discord!
+
+For any questions, suggestions, join our discord at [https://discord.gg/thirdweb](https://discord.gg/thirdweb).
