@@ -15,7 +15,7 @@ import {
   MARKETPLACE_ADDRESS,
   NFT_COLLECTION_ADDRESS,
 } from "../const/contractAddresses";
-import styles from "../styles/Profile.module.css";
+import styles from "../styles/Buy.module.css";
 import randomColor from "../util/randomColor";
 
 const [randomColor1, randomColor2, randomColor3, randomColor4] = [
@@ -25,7 +25,7 @@ const [randomColor1, randomColor2, randomColor3, randomColor4] = [
   randomColor(),
 ];
 
-export default function ProfilePage() {
+export default function Buy() {
   const router = useRouter();
   const [tab, setTab] = useState<"nfts" | "listings" | "auctions">("listings"); // Set "listings" as the default active tab
 
@@ -41,11 +41,6 @@ export default function ProfilePage() {
       seller: router.query.address as string,
     });
 
-  const { data: auctionListings, isLoading: loadingAuctions } =
-    useValidEnglishAuctions(marketplace, {
-      seller: router.query.address as string,
-    });
-
   return (
     <Container maxWidth="lg">
       <div className={styles.tabs}>
@@ -57,14 +52,6 @@ export default function ProfilePage() {
         >
           Listed Xailiens 
         </h3>
-        <h3
-          className={`${styles.tab} ${
-            tab === "auctions" ? styles.activeTab : ""
-          }`}
-          onClick={() => setTab("auctions")}
-        >
-          Current Auctions
-        </h3>
       </div>
       <div
         className={`${tab === "listings" ? styles.activeTabContent : styles.tabContent}`}
@@ -75,19 +62,6 @@ export default function ProfilePage() {
           <p>Nothing for sale yet! Head to the sell tab to list an NFT.</p>
         ) : (
           directListings?.map((listing) => (
-            <ListingWrapper listing={listing} key={listing.id} />
-          ))
-        )}
-      </div>
-      <div
-        className={`${tab === "auctions" ? styles.activeTabContent : styles.tabContent}`}
-      >
-        {loadingAuctions ? (
-          <p>Loading...</p>
-        ) : auctionListings && auctionListings.length === 0 ? (
-          <p>No Xailien available.</p>
-        ) : (
-          auctionListings?.map((listing) => (
             <ListingWrapper listing={listing} key={listing.id} />
           ))
         )}
